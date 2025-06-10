@@ -4,38 +4,183 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modelado de Tráfico</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- Integración de Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Personalización del fondo y contenedor principal */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #a8c0ff, #3f2b96); /* Gradiente suave de azul */
+            color: #fff;
+            padding: 50px 0;
+            margin: 0;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.1); /* Fondo semi-transparente */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            margin: auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease-out; /* Animación de entrada */
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .formula {
+            font-size: 1.2em;
+            color: #333;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-custom {
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 10px;
+            padding: 10px 20px;
+            transition: 0.3s;
+            width: 100%;
+        }
+
+        .btn-custom:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        .method-section h4 {
+            margin-top: 20px;
+            font-size: 1.8rem;
+            text-decoration: underline;
+        }
+
+        /* Animación de entrada */
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Modelado de Problemas de Tráfico</h1>
-        <p>{{ explanation }}</p>
         
+        <!-- Objetivo del problema -->
+        <div class="objective mb-4">
+            <h3>Objetivo del Problema</h3>
+            <p>
+                El objetivo de este modelo es distribuir el tráfico entre dos rutas de manera eficiente para evitar la saturación y garantizar un flujo vehicular óptimo. Se pretende encontrar los valores de <strong>X</strong> (tráfico en ruta 1) y <strong>Y</strong> (tráfico en ruta 2) que satisfagan las capacidades máximas de ambas rutas, así como la distribución de tráfico global.
+            </p>
+        </div>
+
+        <p>{{ explanation }}</p>
+
+        <!-- Formulario de entrada -->
         <form action="/traffic" method="POST">
-            <label for="a1">Coeficiente A1 (volumen de tráfico en la ruta 1):</label>
-            <input type="number" name="a1" class="form-control" required>
+            <div class="mb-3">
+                <label for="a1" class="form-label">Coeficiente A1 (volumen de tráfico en la ruta 1):</label>
+                <input type="number" name="a1" class="form-control" required>
+            </div>
 
-            <label for="a2">Coeficiente A2 (volumen de tráfico en la ruta 2):</label>
-            <input type="number" name="a2" class="form-control" required>
+            <div class="mb-3">
+                <label for="a2" class="form-label">Coeficiente A2 (volumen de tráfico en la ruta 2):</label>
+                <input type="number" name="a2" class="form-control" required>
+            </div>
 
-            <label for="a3">Coeficiente A3 (capacidad máxima de la ruta 1):</label>
-            <input type="number" name="a3" class="form-control" required>
+            <div class="mb-3">
+                <label for="a3" class="form-label">Coeficiente A3 (capacidad máxima de la ruta 1):</label>
+                <input type="number" name="a3" class="form-control" required>
+            </div>
 
-            <label for="b1">Constante B1 (capacidad máxima de la ruta 2):</label>
-            <input type="number" name="b1" class="form-control" required>
+            <div class="mb-3">
+                <label for="b1" class="form-label">Constante B1 (capacidad máxima de la ruta 2):</label>
+                <input type="number" name="b1" class="form-control" required>
+            </div>
 
-            <label for="b2">Constante B2 (distribución de tráfico):</label>
-            <input type="number" name="b2" class="form-control" required>
+            <div class="mb-3">
+                <label for="b2" class="form-label">Constante B2 (distribución de tráfico):</label>
+                <input type="number" name="b2" class="form-control" required>
+            </div>
 
-            <button type="submit" class="btn btn-primary mt-3">Calcular</button>
+            <button type="submit" class="btn btn-custom">Calcular</button>
         </form>
 
         {% if gauss_jordan %}
-        <h2>Resultados:</h2>
-        <p><strong>Gauss-Jordan:</strong> X = {{ gauss_jordan[0] }}, Y = {{ gauss_jordan[1] }}</p>
-        <p><strong>Eliminación Gaussiana:</strong> X = {{ gauss_elimination[0] }}, Y = {{ gauss_elimination[1] }}</p>
-        <p><strong>Método de la Matriz Inversa:</strong> X = {{ inverse_matrix[0] }}, Y = {{ inverse_matrix[1] }}</p>
-        <p><strong>Método de Cramer:</strong> X = {{ cramer[0] }}, Y = {{ cramer[1] }}</p>
+        <h2 class="mt-5">Resultados:</h2>
+        <!-- Resultados con manejo de NaN -->
+        {% if gauss_jordan[0] == 'NaN' %}
+            <p><strong>Gauss-Jordan:</strong> Error: La matriz no es invertible o el sistema no tiene solución única.</p>
+        {% else %}
+            <p><strong>Gauss-Jordan:</strong> X = {{ gauss_jordan[0] }}, Y = {{ gauss_jordan[1] }}</p>
+        {% endif %}
+        
+        {% if gauss_elimination[0] == 'NaN' %}
+            <p><strong>Eliminación Gaussiana:</strong> Error: La matriz no es invertible o el sistema no tiene solución única.</p>
+        {% else %}
+            <p><strong>Eliminación Gaussiana:</strong> X = {{ gauss_elimination[0] }}, Y = {{ gauss_elimination[1] }}</p>
+        {% endif %}
+        
+        {% if inverse_matrix[0] == 'NaN' %}
+            <p><strong>Método de la Matriz Inversa:</strong> Error: La matriz no es invertible.</p>
+        {% else %}
+            <p><strong>Método de la Matriz Inversa:</strong> X = {{ inverse_matrix[0] }}, Y = {{ inverse_matrix[1] }}</p>
+        {% endif %}
+        
+        {% if cramer[0] == 'NaN' %}
+            <p><strong>Método de Cramer:</strong> Error: La matriz no es invertible o el sistema no tiene solución única.</p>
+        {% else %}
+            <p><strong>Método de Cramer:</strong> X = {{ cramer[0] }}, Y = {{ cramer[1] }}</p>
+        {% endif %}
+
+        <!-- Fórmulas para cada método -->
+        <div class="method-section">
+            <h4>Fórmulas Utilizadas</h4>
+
+            <!-- Gauss-Jordan -->
+            <div class="formula">
+                <strong>Gauss-Jordan:</strong><br>
+                <code>AX = B → Rref(A) X = B</code>
+                <br>La matriz aumentada se reduce para encontrar la solución exacta de X y Y.
+            </div>
+
+            <!-- Eliminación Gaussiana -->
+            <div class="formula">
+                <strong>Eliminación Gaussiana:</strong><br>
+                <code>A X = B → Rref(A) X = B</code>
+                <br>Transforma la matriz a forma triangular superior y se resuelve por sustitución regresiva.
+            </div>
+
+            <!-- Matriz Inversa -->
+            <div class="formula">
+                <strong>Matriz Inversa:</strong><br>
+                <code>X = A⁻¹ * B</code>
+                <br>Usa la matriz inversa de A para obtener la solución.
+            </div>
+
+            <!-- Regla de Cramer -->
+            <div class="formula">
+                <strong>Regla de Cramer:</strong><br>
+                <code>X = Δx / Δ</code> y <code>Y = Δy / Δ</code>
+                <br>Utiliza determinantes para calcular las soluciones individuales.
+            </div>
+        </div>
 
         <div class="explanation mt-4">
             <h3>Interpretación de los Resultados</h3>
@@ -47,19 +192,13 @@
                 Resolver este sistema de ecuaciones permite determinar cómo distribuir el tráfico de forma eficiente entre dos rutas, evitando la saturación y mejorando el flujo vehicular.
             </p>
             <p>
-                Se utilizaron los siguientes métodos numéricos para encontrar los valores de X y Y:
-                <ul>
-                    <li><strong>Gauss-Jordan:</strong> Transforma la matriz aumentada en su forma reducida para obtener una solución exacta.</li>
-                    <li><strong>Eliminación Gaussiana:</strong> Convierte la matriz a triangular superior y aplica sustitución regresiva.</li>
-                    <li><strong>Matriz Inversa:</strong> Aplica X = A⁻¹·B para encontrar los resultados si la matriz de coeficientes es invertible.</li>
-                    <li><strong>Regla de Cramer:</strong> Utiliza determinantes para hallar soluciones individuales si el sistema tiene solución única.</li>
-                </ul>
-            </p>
-            <p>
                 Si todos los métodos entregan la misma solución, se confirma que el modelo es consistente y tiene una única solución válida para la asignación de tráfico.
             </p>
         </div>
         {% endif %}
     </div>
+
+    <!-- Integración de Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,13 +1,19 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 import numpy as np
 
 app = Flask(__name__)
 
-# Métodos de resolución (como antes)
+# Método de Gauss-Jordan
 def gauss_jordan(a, b):
+    # Verificar si la matriz es invertible
+    if np.linalg.det(a) == 0:
+        return [float('nan'), float('nan')]  # Devolver NaN si la matriz no es invertible
+
     n = len(b)
     augmented_matrix = np.hstack([a, b.reshape(-1, 1)])
+    
     for i in range(n):
+        # Buscar el máximo en la columna
         max_row = max(range(i, n), key=lambda r: abs(augmented_matrix[r][i]))
         augmented_matrix[i], augmented_matrix[max_row] = augmented_matrix[max_row], augmented_matrix[i]
 
@@ -18,12 +24,20 @@ def gauss_jordan(a, b):
     x = np.zeros(n)
     for i in range(n - 1, -1, -1):
         x[i] = (augmented_matrix[i][-1] - sum(augmented_matrix[i][j] * x[j] for j in range(i + 1, n))) / augmented_matrix[i][i]
+    
     return x
 
+# Método de Eliminación Gaussiana
 def gauss_elimination(a, b):
+    # Verificar si la matriz es invertible
+    if np.linalg.det(a) == 0:
+        return [float('nan'), float('nan')]  # Devolver NaN si la matriz no es invertible
+
     n = len(b)
     augmented_matrix = np.hstack([a, b.reshape(-1, 1)])
+
     for i in range(n):
+        # Buscar el máximo en la columna
         max_row = max(range(i, n), key=lambda r: abs(augmented_matrix[r][i]))
         augmented_matrix[i], augmented_matrix[max_row] = augmented_matrix[max_row], augmented_matrix[i]
 
@@ -34,21 +48,32 @@ def gauss_elimination(a, b):
     x = np.zeros(n)
     for i in range(n - 1, -1, -1):
         x[i] = (augmented_matrix[i][-1] - sum(augmented_matrix[i][j] * x[j] for j in range(i + 1, n))) / augmented_matrix[i][i]
+    
     return x
 
+# Método de la Matriz Inversa
 def inverse_matrix_method(a, b):
-    a_inv = np.linalg.inv(a)
+    # Verificar si la matriz es invertible
+    if np.linalg.det(a) == 0:
+        return [float('nan'), float('nan')]  # Devolver NaN si la matriz no es invertible
+    
+    a_inv = np.linalg.inv(a)  # Inversa de la matriz A
     return np.dot(a_inv, b)
 
+# Método de Cramer
 def cramer_method(a, b):
+    # Verificar si la matriz es invertible
     det_a = np.linalg.det(a)
+    if det_a == 0:
+        return [float('nan'), float('nan')]  # Devolver NaN si la matriz no es invertible
+
     n = len(b)
     solutions = []
     for i in range(n):
         a_copy = a.copy()
-        a_copy[:, i] = b
+        a_copy[:, i] = b  # Sustituir la columna i de A con el vector b
         det_ai = np.linalg.det(a_copy)
-        solutions.append(det_ai / det_a)
+        solutions.append(det_ai / det_a)  # Solución para X o Y
     return np.array(solutions)
 
 # Explicaciones para cada caso
@@ -94,6 +119,7 @@ def optimization_case():
         A = np.array([[a1, a2], [a3, b1]])
         B = np.array([b2, b2])
         
+        # Calcular las soluciones
         gauss_jordan_solution = gauss_jordan(A, B)
         gauss_elimination_solution = gauss_elimination(A, B)
         inverse_matrix_solution = inverse_matrix_method(A, B)
@@ -120,6 +146,7 @@ def population_case():
         A = np.array([[a1, a2], [a3, b1]])
         B = np.array([b2, b2])
         
+        # Calcular las soluciones
         gauss_jordan_solution = gauss_jordan(A, B)
         gauss_elimination_solution = gauss_elimination(A, B)
         inverse_matrix_solution = inverse_matrix_method(A, B)
@@ -146,6 +173,7 @@ def traffic_case():
         A = np.array([[a1, a2], [a3, b1]])
         B = np.array([b2, b2])
         
+        # Calcular las soluciones
         gauss_jordan_solution = gauss_jordan(A, B)
         gauss_elimination_solution = gauss_elimination(A, B)
         inverse_matrix_solution = inverse_matrix_method(A, B)
