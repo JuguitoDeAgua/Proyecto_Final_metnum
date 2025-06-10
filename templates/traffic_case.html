@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelado de Tráfico</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Modelado de Problemas de Tráfico</h1>
+        <p>{{ explanation }}</p>
+        
+        <form action="/traffic" method="POST">
+            <label for="a1">Coeficiente A1 (volumen de tráfico en la ruta 1):</label>
+            <input type="number" name="a1" class="form-control" required>
+
+            <label for="a2">Coeficiente A2 (volumen de tráfico en la ruta 2):</label>
+            <input type="number" name="a2" class="form-control" required>
+
+            <label for="a3">Coeficiente A3 (capacidad máxima de la ruta 1):</label>
+            <input type="number" name="a3" class="form-control" required>
+
+            <label for="b1">Constante B1 (capacidad máxima de la ruta 2):</label>
+            <input type="number" name="b1" class="form-control" required>
+
+            <label for="b2">Constante B2 (distribución de tráfico):</label>
+            <input type="number" name="b2" class="form-control" required>
+
+            <button type="submit" class="btn btn-primary mt-3">Calcular</button>
+        </form>
+
+        {% if gauss_jordan %}
+        <h2>Resultados:</h2>
+        <p><strong>Gauss-Jordan:</strong> X = {{ gauss_jordan[0] }}, Y = {{ gauss_jordan[1] }}</p>
+        <p><strong>Eliminación Gaussiana:</strong> X = {{ gauss_elimination[0] }}, Y = {{ gauss_elimination[1] }}</p>
+        <p><strong>Método de la Matriz Inversa:</strong> X = {{ inverse_matrix[0] }}, Y = {{ inverse_matrix[1] }}</p>
+        <p><strong>Método de Cramer:</strong> X = {{ cramer[0] }}, Y = {{ cramer[1] }}</p>
+
+        <div class="explanation mt-4">
+            <h3>Interpretación de los Resultados</h3>
+            <p>
+                En este modelo, <strong>X</strong> representa la cantidad de tráfico asignado a la <strong>ruta 1</strong>, y <strong>Y</strong> la cantidad asignada a la <strong>ruta 2</strong>. 
+                Estas cantidades deben satisfacer tanto las capacidades máximas de cada ruta como la distribución general del tráfico.
+            </p>
+            <p>
+                Resolver este sistema de ecuaciones permite determinar cómo distribuir el tráfico de forma eficiente entre dos rutas, evitando la saturación y mejorando el flujo vehicular.
+            </p>
+            <p>
+                Se utilizaron los siguientes métodos numéricos para encontrar los valores de X y Y:
+                <ul>
+                    <li><strong>Gauss-Jordan:</strong> Transforma la matriz aumentada en su forma reducida para obtener una solución exacta.</li>
+                    <li><strong>Eliminación Gaussiana:</strong> Convierte la matriz a triangular superior y aplica sustitución regresiva.</li>
+                    <li><strong>Matriz Inversa:</strong> Aplica X = A⁻¹·B para encontrar los resultados si la matriz de coeficientes es invertible.</li>
+                    <li><strong>Regla de Cramer:</strong> Utiliza determinantes para hallar soluciones individuales si el sistema tiene solución única.</li>
+                </ul>
+            </p>
+            <p>
+                Si todos los métodos entregan la misma solución, se confirma que el modelo es consistente y tiene una única solución válida para la asignación de tráfico.
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

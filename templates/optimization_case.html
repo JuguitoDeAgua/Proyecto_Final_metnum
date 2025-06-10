@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimización en Manufactura</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Optimización en la Industria de Manufactura</h1>
+        <p>{{ explanation }}</p>
+        
+        <form action="/optimization" method="POST">
+            <label for="a1">Coeficiente A1 (recurso necesario para el producto 1):</label>
+            <input type="number" name="a1" class="form-control" required>
+
+            <label for="a2">Coeficiente A2 (recurso necesario para el producto 2):</label>
+            <input type="number" name="a2" class="form-control" required>
+
+            <label for="a3">Coeficiente A3 (restricción de recursos):</label>
+            <input type="number" name="a3" class="form-control" required>
+
+            <label for="b1">Constante B1 (cantidad de recursos disponibles):</label>
+            <input type="number" name="b1" class="form-control" required>
+
+            <label for="b2">Constante B2 (cantidad de recursos disponibles):</label>
+            <input type="number" name="b2" class="form-control" required>
+
+            <button type="submit" class="btn btn-primary mt-3">Calcular</button>
+        </form>
+
+        {% if gauss_jordan %}
+        <h2>Resultados:</h2>
+        <p><strong>Gauss-Jordan:</strong> X = {{ gauss_jordan[0] }}, Y = {{ gauss_jordan[1] }}</p>
+        <p><strong>Eliminación Gaussiana:</strong> X = {{ gauss_elimination[0] }}, Y = {{ gauss_elimination[1] }}</p>
+        <p><strong>Método de la Matriz Inversa:</strong> X = {{ inverse_matrix[0] }}, Y = {{ inverse_matrix[1] }}</p>
+        <p><strong>Método de Cramer:</strong> X = {{ cramer[0] }}, Y = {{ cramer[1] }}</p>
+
+        <div class="explanation mt-4">
+            <h3>Interpretación de los resultados</h3>
+            <p>
+                Los valores <strong>X</strong> y <strong>Y</strong> representan las cantidades óptimas de dos productos que pueden fabricarse 
+                utilizando los recursos disponibles, de acuerdo con las restricciones planteadas en el sistema de ecuaciones lineales. 
+            </p>
+            <p>
+                Estos resultados se han obtenido aplicando distintos <strong>métodos numéricos</strong> de resolución de sistemas de ecuaciones lineales, como:
+                <ul>
+                    <li><strong>Gauss-Jordan</strong>: Método directo que transforma la matriz aumentada en la forma reducida por filas.</li>
+                    <li><strong>Eliminación Gaussiana</strong>: Reduce la matriz a triangular superior y resuelve por sustitución regresiva.</li>
+                    <li><strong>Matriz Inversa</strong>: Usa la matriz inversa para encontrar la solución del sistema (X = A⁻¹·B).</li>
+                    <li><strong>Regla de Cramer</strong>: Usa determinantes para encontrar los valores de X y Y, si el determinante principal no es cero.</li>
+                </ul>
+            </p>
+            <p>
+                Si todos los métodos entregan los mismos valores de X y Y, se confirma que el sistema tiene una solución única y coherente.
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

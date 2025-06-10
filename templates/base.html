@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problemas de Sistemas de Ecuaciones</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Resolución de Problemas de Sistemas de Ecuaciones</h1>
+        
+        <form action="/" method="POST">
+            <label for="a1">Coeficiente A1:</label>
+            <input type="number" name="a1" class="form-control" required>
+
+            <label for="a2">Coeficiente A2:</label>
+            <input type="number" name="a2" class="form-control" required>
+
+            <label for="a3">Coeficiente A3:</label>
+            <input type="number" name="a3" class="form-control" required>
+
+            <label for="b1">Constante B1:</label>
+            <input type="number" name="b1" class="form-control" required>
+
+            <label for="b2">Constante B2:</label>
+            <input type="number" name="b2" class="form-control" required>
+
+            <button type="submit" class="btn btn-primary mt-3">Calcular</button>
+        </form>
+
+        {% if gauss_jordan %}
+        <div class="mt-4">
+            <!-- Pestañas -->
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="optimization-tab" data-toggle="tab" href="#optimization" role="tab" aria-controls="optimization" aria-selected="true">Optimización en Manufactura</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="population-tab" data-toggle="tab" href="#population" role="tab" aria-controls="population" aria-selected="false">Dinámica de Poblaciones</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="traffic-tab" data-toggle="tab" href="#traffic" role="tab" aria-controls="traffic" aria-selected="false">Modelado de Tráfico</a>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="myTabContent">
+                <!-- Optimización en Manufactura -->
+                <div class="tab-pane fade show active" id="optimization" role="tabpanel" aria-labelledby="optimization-tab">
+                    <h3>Resultados de Optimización en Manufactura</h3>
+                    <p><strong>Gauss-Jordan:</strong> X = {{ gauss_jordan[0] }}, Y = {{ gauss_jordan[1] }}</p>
+                    <p><strong>Eliminación Gaussiana:</strong> X = {{ gauss_elimination[0] }}, Y = {{ gauss_elimination[1] }}</p>
+                    <p><strong>Método de la Matriz Inversa:</strong> X = {{ inverse_matrix[0] }}, Y = {{ inverse_matrix[1] }}</p>
+                    <p><strong>Método de Cramer:</strong> X = {{ cramer[0] }}, Y = {{ cramer[1] }}</p>
+                    <h4>Explicación:</h4>
+                    <p>{{ explanation_optimization }}</p>
+                </div>
+
+                <!-- Dinámica de Poblaciones -->
+                <div class="tab-pane fade" id="population" role="tabpanel" aria-labelledby="population-tab">
+                    <h3>Resultados de Dinámica de Poblaciones</h3>
+                    <p><strong>Gauss-Jordan:</strong> X = {{ gauss_jordan[0] }}, Y = {{ gauss_jordan[1] }}</p>
+                    <p><strong>Eliminación Gaussiana:</strong> X = {{ gauss_elimination[0] }}, Y = {{ gauss_elimination[1] }}</p>
+                    <p><strong>Método de la Matriz Inversa:</strong> X = {{ inverse_matrix[0] }}, Y = {{ inverse_matrix[1] }}</p>
+                    <p><strong>Método de Cramer:</strong> X = {{ cramer[0] }}, Y = {{ cramer[1] }}</p>
+                    <h4>Explicación:</h4>
+                    <p>{{ explanation_population }}</p>
+                </div>
+
+                <!-- Modelado de Tráfico -->
+                <div class="tab-pane fade" id="traffic" role="tabpanel" aria-labelledby="traffic-tab">
+                    <h3>Resultados de Modelado de Tráfico</h3>
+                    <p><strong>Gauss-Jordan:</strong> X = {{ gauss_jordan[0] }}, Y = {{ gauss_jordan[1] }}</p>
+                    <p><strong>Eliminación Gaussiana:</strong> X = {{ gauss_elimination[0] }}, Y = {{ gauss_elimination[1] }}</p>
+                    <p><strong>Método de la Matriz Inversa:</strong> X = {{ inverse_matrix[0] }}, Y = {{ inverse_matrix[1] }}</p>
+                    <p><strong>Método de Cramer:</strong> X = {{ cramer[0] }}, Y = {{ cramer[1] }}</p>
+                    <h4>Explicación:</h4>
+                    <p>{{ explanation_traffic }}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dinámica de Poblaciones</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Estudio de Dinámica de Poblaciones</h1>
+        <p>{{ explanation }}</p>
+        
+        <form action="/population" method="POST">
+            <label for="a1">Coeficiente A1 (tasa de crecimiento de las presas):</label>
+            <input type="number" name="a1" class="form-control" required>
+
+            <label for="a2">Coeficiente A2 (tasa de depredación de las presas):</label>
+            <input type="number" name="a2" class="form-control" required>
+
+            <label for="a3">Coeficiente A3 (tasa de crecimiento de los depredadores):</label>
+            <input type="number" name="a3" class="form-control" required>
+
+            <label for="b1">Constante B1 (capacidad máxima de las presas):</label>
+            <input type="number" name="b1" class="form-control" required>
+
+            <label for="b2">Constante B2 (capacidad máxima de los depredadores):</label>
+            <input type="number" name="b2" class="form-control" required>
+
+            <button type="submit" class="btn btn-primary mt-3">Calcular</button>
+        </form>
+
+        {% if gauss_jordan %}
+        <h2>Resultados:</h2>
+        <p><strong>Gauss-Jordan:</strong> X = {{ gauss_jordan[0] }}, Y = {{ gauss_jordan[1] }}</p>
+        <p><strong>Eliminación Gaussiana:</strong> X = {{ gauss_elimination[0] }}, Y = {{ gauss_elimination[1] }}</p>
+        <p><strong>Método de la Matriz Inversa:</strong> X = {{ inverse_matrix[0] }}, Y = {{ inverse_matrix[1] }}</p>
+        <p><strong>Método de Cramer:</strong> X = {{ cramer[0] }}, Y = {{ cramer[1] }}</p>
+
+        <div class="explanation mt-4">
+            <h3>Interpretación de los Resultados</h3>
+            <p>
+                En este modelo de dinámica de poblaciones, <strong>X</strong> representa la cantidad de <strong>presas</strong> y <strong>Y</strong> representa la cantidad de <strong>depredadores</strong> en equilibrio poblacional, es decir, cuando ambos grupos coexisten sin que haya crecimiento o disminución indefinida.
+            </p>
+            <p>
+                Estos valores se obtienen al resolver un sistema de ecuaciones lineales basado en las tasas de crecimiento, depredación y las capacidades máximas poblacionales.
+            </p>
+            <p>
+                Los métodos numéricos utilizados son:
+                <ul>
+                    <li><strong>Gauss-Jordan:</strong> Lleva la matriz aumentada a su forma reducida para encontrar la solución directa.</li>
+                    <li><strong>Eliminación Gaussiana:</strong> Simplifica la matriz a forma triangular superior y aplica sustitución regresiva.</li>
+                    <li><strong>Matriz Inversa:</strong> Usa la fórmula X = A⁻¹·B para encontrar la solución si la matriz es invertible.</li>
+                    <li><strong>Regla de Cramer:</strong> Usa determinantes para obtener X y Y si el sistema tiene solución única.</li>
+                </ul>
+            </p>
+            <p>
+                Si todos los métodos dan el mismo resultado, se valida la consistencia de las soluciones. Este análisis ayuda a entender cómo interactúan especies en un ecosistema y a tomar decisiones sobre conservación o control.
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
